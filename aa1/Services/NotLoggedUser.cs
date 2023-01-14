@@ -14,12 +14,21 @@ namespace aa1.Services {
     public class NotLoggedUser {
         JsonService jsonService = new JsonService();
 
+        string dateEnv = Environment.GetEnvironmentVariable("env_date");
+
         public void ShowFilms() {
 
             string filmsString = jsonService.GetFilmListFromFile();
             var films = jsonService.DeserializeJsonFile(filmsString);
             films.ForEach(e => {
-                Console.WriteLine(e.Name);
+                if(dateEnv == "us")
+                {
+                    Console.WriteLine($"{e.Name} - {e.CreationDate.ToString("MM/dd/yyyy")}");
+                }
+                else
+                {
+                    Console.WriteLine($"{e.Name} - {e.CreationDate.ToString("dd MMMM yyyy")}");
+                }
             });
         }
     }
