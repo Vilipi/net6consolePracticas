@@ -7,19 +7,16 @@ using System.Threading.Tasks;
 using aa1.Models;
 using Newtonsoft.Json;
 
-namespace aa1.Services
-{
-    public class NotLoggedUser
-    {
-        public static string _path = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}/Utils/films.json";
+namespace aa1.Services {
+    public class NotLoggedUser {
+        public static string _path2 = $@"{Path.GetFullPath(Directory.GetCurrentDirectory())}/Resource/films.json";
 
-        public void ShowFilms()
-        {
-            //Console.WriteLine(_path);
+        public void ShowFilms() {
+
+            //Console.WriteLine(_path2);
             string filmsString = GetFilmListFromFile();
             var films = DeserializeJsonFile(filmsString);
-            films.ForEach(e =>
-            {
+            films.ForEach(e => {
                 Console.WriteLine(e.Name);
             });
         }
@@ -28,9 +25,9 @@ namespace aa1.Services
         private string GetFilmListFromFile() {
             string filmsJsonFromFile;
 
-            var reader = new StreamReader(_path);
+            var reader = new StreamReader(_path2);
             filmsJsonFromFile = reader.ReadToEnd();
-            
+
             return filmsJsonFromFile;
         }
         private List<Film> DeserializeJsonFile(string filmsJsonFromFile) {
