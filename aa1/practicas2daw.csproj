@@ -11,5 +11,10 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
+  <ItemGroup>
+      <None Update="Resource/*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+  </ItemGroup>
 
 </Project>

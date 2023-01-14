@@ -9,12 +9,11 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aa1.Services
-{
-    public class UserService
-    {
+namespace aa1.Services {
+    public class UserService {
 
-        public static string _path = $@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName}/Utils/films.json";
+        public static string _path2 = $@"{Path.GetFullPath(Directory.GetCurrentDirectory())}/Resource/films.json"; //docker
+
 
         public static List<User> users = new List<User>
         {
@@ -22,15 +21,13 @@ namespace aa1.Services
         };
         public static List<Film> films = new List<Film>();
 
-        public int UserMenu()
-        {
-            Console.WriteLine("Please write a number to choose an action:");
+        public int UserMenu() {
+            //Console.WriteLine("Please write a number to choose an action:");
             Console.WriteLine(" - 1: Sign up");
             Console.WriteLine(" - 2: Sign in");
             Console.WriteLine(" - 3: Back");
             string login = Console.ReadLine();
-            while(login != "1" && login != "2" && login != "3")
-            {
+            while (login != "1" && login != "2" && login != "3") {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Wrong number, try again");
                 Console.ResetColor();
@@ -38,29 +35,22 @@ namespace aa1.Services
 
             }
 
-            if (login == "1")
-            {
-               return SignUp();
-            }
-            else if(login == "2")
-            {
-               var userlogged = SignIn();
-               var menu = LoggedUserMenu(userlogged);
+            if (login == "1") {
+                return SignUp();
+            } else if (login == "2") {
+                var userlogged = SignIn();
+                var menu = LoggedUserMenu(userlogged);
 
-               while (menu != 0)
-               {
+                while (menu != 0) {
                     menu = LoggedUserMenu(userlogged);
-               }
+                }
                 return 0;
-            }
-            else
-            {
+            } else {
                 return 0;
             }
         }
 
-        private int SignUp()
-        {
+        private int SignUp() {
             var newUser = new User();
             Console.WriteLine("Name:");
             newUser.Name = Console.ReadLine();
@@ -71,8 +61,7 @@ namespace aa1.Services
             var db = Console.ReadLine();
             DateTime i;
             bool result = DateTime.TryParse(db, out i);
-            while (!result)
-            {
+            while (!result) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Wrong date format\n");
                 Console.ResetColor();
@@ -93,8 +82,7 @@ namespace aa1.Services
             Console.WriteLine("Please repeat your password:");
             var passwordRepeated = Console.ReadLine();
 
-            while (passwordRepeated != newUser.Password)
-            {
+            while (passwordRepeated != newUser.Password) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("\nYour passwords do not match!\n");
                 Console.ResetColor();
@@ -111,13 +99,11 @@ namespace aa1.Services
             return 0;
         }
 
-        private User SignIn()
-        {
+        private User SignIn() {
             Console.WriteLine("Username: ");
             var inputUsername = Console.ReadLine();
             var existingUser = users.Find(x => x.UserName == inputUsername);
-            while(existingUser == null)
-            {
+            while (existingUser == null) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("User not found, try a different username");
                 Console.ResetColor();
@@ -127,8 +113,7 @@ namespace aa1.Services
             }
             Console.WriteLine("Password: ");
             var inputPassword = Console.ReadLine();
-            while(inputPassword != existingUser.Password)
-            {
+            while (inputPassword != existingUser.Password) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Wrong password. Try again.");
                 Console.ResetColor();
@@ -141,35 +126,30 @@ namespace aa1.Services
             return existingUser;
         }
 
-        private int LoggedUserMenu()
-        {
+        private int LoggedUserMenu() {
             var specilasitsString = GetFilmListFromFile();
             var specialiast = DeserializeJsonFile(specilasitsString);
             return 0;
         }
 
-        private int LoggedUserMenu(User user)
-        {
+        private int LoggedUserMenu(User user) {
             Console.WriteLine("Please write one of the following numbers:");
             Console.WriteLine(" - 1: View all Films");
             Console.WriteLine(" - 2: View my favourite films");
             Console.WriteLine(" - 3: Log out");
             string loggedUserAction = Console.ReadLine();
 
-            while (loggedUserAction != "1" && loggedUserAction != "2" && loggedUserAction != "3")
-            {
+            while (loggedUserAction != "1" && loggedUserAction != "2" && loggedUserAction != "3") {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Wrong number, try again");
                 Console.ResetColor();
                 loggedUserAction = Console.ReadLine();
 
             }
-            if (loggedUserAction == "1")
-            {
+            if (loggedUserAction == "1") {
                 string filmsString = GetFilmListFromFile();
                 var films = DeserializeJsonFile(filmsString);
-                films.ForEach(e =>
-                {
+                films.ForEach(e => {
                     Console.WriteLine($" - {e.Id}: {e.Name}");
                 });
 
@@ -184,8 +164,7 @@ namespace aa1.Services
                     loggedUserAction = Console.ReadLine();
 
                 }
-                if(filmsAction == "1")
-                {
+                if (filmsAction == "1") {
                     Console.WriteLine("Write the Id of the film you want to add/remove from your favorite list");
                     string filmsSelected = Console.ReadLine();
 
@@ -208,26 +187,20 @@ namespace aa1.Services
                     }
 
                     var existingFilm = user.Films.Find(e => e.Id == appointmentToCancelIndex);
-                    if(existingFilm == null)
-                    {
-                        user.Films.Add(films[appointmentToCancelIndex-1]);
+                    if (existingFilm == null) {
+                        user.Films.Add(films[appointmentToCancelIndex - 1]);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Film added to Favorites");
                         Console.ResetColor();
-                    }
-                    else
-                    {
+                    } else {
                         user.Films.Remove(existingFilm);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Film removed from Favorites");
                         Console.ResetColor();
                     }
                     return 1;
-                }
-                else if(filmsAction == "2")
-                {
-                    films.ForEach(e =>
-                    {
+                } else if (filmsAction == "2") {
+                    films.ForEach(e => {
                         Console.WriteLine($" - {e.Id} - {e.Name}: {e.Rating}\n");
                     });
                     Console.WriteLine("Choose the film you want to rate");
@@ -273,41 +246,32 @@ namespace aa1.Services
                         RateInt = Int32.Parse(Console.ReadLine());
                     }
 
-                    var newRating = ((filmSelectedToRate.Rating * filmSelectedToRate.VotesGiven)+ RateInt) / (filmSelectedToRate.VotesGiven + 1);
+                    var newRating = ((filmSelectedToRate.Rating * filmSelectedToRate.VotesGiven) + RateInt) / (filmSelectedToRate.VotesGiven + 1);
                     films.Find(e => e.Id == filmsToRateIndex).Rating = newRating;
                     films.Find(e => e.Id == filmsToRateIndex).VotesGiven++;
                     SerializeJsonFile(films);
                     Console.WriteLine("Film voted!");
                     return 1;
 
-                } else
-                {
+                } else {
                     return 1;
                 }
-            }
-              
-            else if (loggedUserAction == "2")
-            {
+            } else if (loggedUserAction == "2") {
                 var favFilms = user.Films;
-                if(favFilms.Count == 0)
-                {
+                if (favFilms.Count == 0) {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("\nYou don not have any favorite film yet!!\n");
                     Console.ResetColor();
                     return 1;
-                }
-                else
-                {
-                    user.Films.ForEach(e =>
-                    {
+                } else {
+                    user.Films.ForEach(e => {
                         Console.WriteLine(e.Name);
                     });
                     return 1;
                 }
-                
-            }
-            else // salir
-            {
+
+            } else // salir
+              {
                 return 0;
             }
         }
@@ -320,18 +284,17 @@ namespace aa1.Services
         private string GetFilmListFromFile() {
             string filmsJsonFromFile;
 
-            var reader = new StreamReader(_path);
+            var reader = new StreamReader(_path2);
             filmsJsonFromFile = reader.ReadToEnd();
-            
+
             return filmsJsonFromFile;
         }
         private List<Film> DeserializeJsonFile(string filmsJsonFromFile) {
             return JsonConvert.DeserializeObject<List<Film>>(filmsJsonFromFile);
         }
-        private void SerializeJsonFile(List<Film> films)
-        {
+        private void SerializeJsonFile(List<Film> films) {
             string filmsJson = JsonConvert.SerializeObject(films.ToArray(), Formatting.Indented);
-            File.WriteAllText(_path, filmsJson);
+            File.WriteAllText(_path2, filmsJson);
         }
     }
 }
