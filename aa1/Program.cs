@@ -7,19 +7,15 @@ int exit = 0;
 UserService _userService = new UserService();
 NotLoggedUser _notLoggedUserService = new NotLoggedUser();
 
-string saludo = Environment.GetEnvironmentVariable("env_saludo");
-
-
-AnsiConsole.Write(new FigletText("Peliculas Favoritas").Color(Color.Cyan1));
+AnsiConsole.Write(new FigletText("Películas Favoritas").Color(Color.Cyan1));
 
 while (exit == 0) {
     
     Console.ForegroundColor = ConsoleColor.Cyan;
-    Console.WriteLine("\nPeliculas Favoritas app");
+    Console.WriteLine("\nPelículas Favoritas app");
     Console.ResetColor();
-    Console.WriteLine($"{saludo}");
     Console.WriteLine("Please, type a number to choose an option");
-    Console.WriteLine(" - 1: Log in");
+    Console.WriteLine(" - 1: User zone");
     Console.WriteLine(" - 2: Check films");
     Console.WriteLine(" - 3: exit");
     string option = Console.ReadLine();
