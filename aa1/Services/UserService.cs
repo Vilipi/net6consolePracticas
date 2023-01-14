@@ -1,6 +1,7 @@
 ﻿using aa1.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using practicas2daw.Services;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,7 @@ namespace aa1.Services
 {
     public class UserService
     {
-
-        public static string _path2 = $@"{Path.GetFullPath(Directory.GetCurrentDirectory())}/Resource/films.json"; //docker
-
+        JsonService jsonService = new JsonService();
 
         public static List<User> users = new List<User>
         {
@@ -145,14 +144,14 @@ namespace aa1.Services
 
         private int LoggedUserMenu()
         {
-            var specilasitsString = GetFilmListFromFile();
-            var specialiast = DeserializeJsonFile(specilasitsString);
+            var specilasitsString = jsonService.GetFilmListFromFile();
+            var specialiast = jsonService.DeserializeJsonFile(specilasitsString);
             return 0;
         }
 
         private int LoggedUserMenu(User user)
         {
-            Console.WriteLine("Please write one of the following numbers:");
+            Console.WriteLine("\nPlease write one of the following numbers:");
             Console.WriteLine(" - 1: View all Films");
             Console.WriteLine(" - 2: View my favourite films");
             Console.WriteLine(" - 3: Log out");
@@ -168,8 +167,8 @@ namespace aa1.Services
             }
             if (loggedUserAction == "1")
             {
-                string filmsString = GetFilmListFromFile();
-                var films = DeserializeJsonFile(filmsString);
+                string filmsString = jsonService.GetFilmListFromFile();
+                var films = jsonService.DeserializeJsonFile(filmsString);
                 films.ForEach(e =>
                 {
                     Console.WriteLine($" - {e.Id}: {e.Name}");
@@ -278,7 +277,7 @@ namespace aa1.Services
                     var newRating = ((filmSelectedToRate.Rating * filmSelectedToRate.VotesGiven)+ RateInt) / (filmSelectedToRate.VotesGiven + 1);
                     films.Find(e => e.Id == filmsToRateIndex).Rating = newRating;
                     films.Find(e => e.Id == filmsToRateIndex).VotesGiven++;
-                    SerializeJsonFile(films);
+                    jsonService.SerializeJsonFile(films);
                     Console.WriteLine("Film voted!");
                     return 1;
 
@@ -312,36 +311,6 @@ namespace aa1.Services
             {
                 return 0;
             }
-        }
-
-
-
-
-
-        // Info from JSON
-        private string GetFilmListFromFile() {
-            string filmsJsonFromFile = "";
-
-            try {
-
-                var reader = new StreamReader(_path2);
-                filmsJsonFromFile = reader.ReadToEnd();
-                return filmsJsonFromFile;
-            } catch (Exception exception) {
-                var log = new LoggerConfiguration().WriteTo.RollingFile("log-{Date}.txt").CreateLogger();
-                log.Information($"{exception.Data}, {exception.Message}");
-                return filmsJsonFromFile;
-            }
-        }
-
-        private List<Film> DeserializeJsonFile(string filmsJsonFromFile) {
-            return JsonConvert.DeserializeObject<List<Film>>(filmsJsonFromFile);
-        }
-
-        private void SerializeJsonFile(List<Film> films)
-        {
-            string filmsJson = JsonConvert.SerializeObject(films.ToArray(), Formatting.Indented);
-            File.WriteAllText(_path2, filmsJson);
         }
     }
 }

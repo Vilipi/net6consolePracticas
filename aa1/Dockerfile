@@ -1,8 +1,8 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 
-ENV env_saludo Hola
 WORKDIR /App
 COPY . ./
+#ENV env_saludo Hola
 
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
